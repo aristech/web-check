@@ -222,6 +222,8 @@ const jobNames = [
   'features',
   'sitemap',
   'carbon',
+  'wordpress-security',
+  'wp-pentest',
 ] as const;
 
 interface JobListItemProps {

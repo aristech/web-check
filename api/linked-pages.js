@@ -1,12 +1,12 @@
 import axios from 'axios';
-import cheerio from 'cheerio';
+import { load as cheerioLoad } from 'cheerio';
 import urlLib from 'url';
 import middleware from './_common/middleware.js';
 
 const linkedPagesHandler = async (url) => {
   const response = await axios.get(url);
   const html = response.data;
-  const $ = cheerio.load(html);
+  const $ = cheerioLoad(html);
   const internalLinksMap = new Map();
   const externalLinksMap = new Map();
 

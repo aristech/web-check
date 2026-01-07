@@ -1,5 +1,5 @@
 import axios from 'axios';
-import cheerio from 'cheerio';
+import { load as cheerioLoad } from 'cheerio';
 import middleware from './_common/middleware.js';
 
 const socialTagsHandler = async (url) => {
@@ -12,7 +12,7 @@ const socialTagsHandler = async (url) => {
   try {
     const response = await axios.get(url);
     const html = response.data;
-    const $ = cheerio.load(html);
+    const $ = cheerioLoad(html);
     
     const metadata = {
       // Basic meta tags

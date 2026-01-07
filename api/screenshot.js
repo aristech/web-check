@@ -4,8 +4,7 @@ import middleware from './_common/middleware.js';
 import { execFile } from 'child_process';
 import { promises as fs } from 'fs';
 import path from 'path';
-import pkg from 'uuid';
-const { v4: uuidv4 } = pkg;
+import { v4 as uuidv4 } from 'uuid';
 
 // Helper function for direct chromium screenshot as fallback
 const directChromiumScreenshot = async (url) => {

@@ -57,6 +57,8 @@ import ThreatsCard from 'web-check-live/components/Results/Threats';
 import TlsCipherSuitesCard from 'web-check-live/components/Results/TlsCipherSuites';
 import TlsIssueAnalysisCard from 'web-check-live/components/Results/TlsIssueAnalysis';
 import TlsClientSupportCard from 'web-check-live/components/Results/TlsClientSupport';
+import WordpressSecurityCard from 'web-check-live/components/Results/WordpressSecurity';
+import WpPentestCard from 'web-check-live/components/Results/WpPentest';
 
 import keys from 'web-check-live/utils/get-keys';
 import { determineAddressType, type AddressType } from 'web-check-live/utils/address-type-checker';
@@ -559,6 +561,24 @@ const Results = (props: { address?: string } ): JSX.Element => {
     }),
   });
 
+  // WordPress Security Scan
+  const [wordpressSecurityResults, updateWordpressSecurityResults] = useMotherHook({
+    jobId: 'wordpress-security',
+    updateLoadingJobs,
+    addressInfo: { address, addressType, expectedAddressTypes: urlTypeOnly },
+    fetchRequest: () => fetch(`${api}/wordpress-security?url=${address}`)
+      .then(res => parseJson(res)),
+  });
+
+  // WordPress Penetration Testing (requires authorization)
+  const [wpPentestResults, updateWpPentestResults] = useMotherHook({
+    jobId: 'wp-pentest',
+    updateLoadingJobs,
+    addressInfo: { address, addressType, expectedAddressTypes: urlTypeOnly },
+    fetchRequest: () => fetch(`${api}/wp-pentest?url=${address}&authorized=true`)
+      .then(res => parseJson(res)),
+  });
+
   /* Cancel remaining jobs after  10 second timeout */
   useEffect(() => {
     const checkJobs = () => {
@@ -843,6 +863,20 @@ const Results = (props: { address?: string } ): JSX.Element => {
       Component: CarbonFootprintCard,
       refresh: updateCarbonResults,
       tags: ['meta'],
+    }, {
+      id: 'wordpress-security',
+      title: 'WordPress Security',
+      result: wordpressSecurityResults,
+      Component: WordpressSecurityCard,
+      refresh: updateWordpressSecurityResults,
+      tags: ['security'],
+    }, {
+      id: 'wp-pentest',
+      title: 'WP Penetration Test',
+      result: wpPentestResults,
+      Component: WpPentestCard,
+      refresh: updateWpPentestResults,
+      tags: ['security'],
     },
   ];
 

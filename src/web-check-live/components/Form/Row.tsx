@@ -103,6 +103,14 @@ const isValidDate = (date: any): boolean => {
 
   // Check if input is a date string
   if (typeof date === 'string') {
+    // Skip version-like strings (e.g., "6.8.3", "1.2.3", "v2.0.0")
+    if (/^v?\d+\.\d+(\.\d+)?$/.test(date.trim())) {
+      return false;
+    }
+    // Skip strings that are just numbers with dots (common version patterns)
+    if (/^\d+(\.\d+)+$/.test(date.trim())) {
+      return false;
+    }
     const dateStringDate = new Date(date);
     return !isNaN(dateStringDate.getTime()) && isInRange(dateStringDate);
   }
@@ -122,6 +130,10 @@ const formatDate = (dateString: string): string => {
   }).format(new Date(dateString));
 }
 const formatValue = (value: any): string => {
+  // Skip version-like strings before attempting date parsing
+  if (typeof value === 'string' && /^v?\d+(\.\d+)+$/.test(value.trim())) {
+    return value;
+  }
   if (isValidDate(new Date(value))) return formatDate(value);
   if (typeof value === 'boolean') return value ? '✅' : '❌';
   return value;
